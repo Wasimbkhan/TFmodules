@@ -24,7 +24,7 @@ resource "azurerm_network_interface" "nicone" {
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.subnetone
+    subnet_id                     = azurerm_subnet.subnetone.id
     private_ip_address_allocation = "Static"
   }
 }
@@ -36,7 +36,7 @@ resource "azurerm_linux_virtual_machine" "vmone" {
   size                = "Standard_F2"
   admin_username      = "adminuser"
   network_interface_ids = [
-    azurerm_network_interface.nicone,
+    azurerm_network_interface.nicone.id
   ]
 
   admin_ssh_key {
