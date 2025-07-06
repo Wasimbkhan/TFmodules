@@ -1,13 +1,19 @@
-variable "VM_name" {
+variable "VMSS_name" {
   description = "Virtual machine name"
   type        = string             # or number, bool, list, map, etc.
     # optional
 }
 
 variable "rg_name" {
-  description = "Resource group name"
+  description = "Virtual machine name"
   type        = string             # or number, bool, list, map, etc.
-  # optional
+    # optional
+}
+
+variable "location" {
+  description = "Virtual machine name"
+  type        = string             # or number, bool, list, map, etc.
+    # optional
 }
 
 variable "vnet_name" {
@@ -16,20 +22,20 @@ variable "vnet_name" {
   # optional
 }
 
-variable "subnet_name" {
-  description = "Resource group name"
+variable "subnet" {
+  description = "Virtual machine name"
   type        = string             # or number, bool, list, map, etc.
-   # optional
-}
-
-variable "location" {
-  description = "Resource group location"
-  type        = string             # or number, bool, list, map, etc.
-   # optional
+    # optional
 }
 
 variable "size" {
-  description = "Resource group location"
+  description = "Virtual machine name"
   type        = string             # or number, bool, list, map, etc.
-   # optional
+    # optional
+}
+
+variable "pubkey" {
+  description = "Virtual machine name"
+  type        = string             # or number, bool, list, map, etc.
+    # optional
 }

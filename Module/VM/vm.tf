@@ -1,10 +1,10 @@
 resource "azurerm_resource_group" "rgone" {
   name     = var.rg_name
-  location = "West Europe"
+  location = var.location
 }
 
 resource "azurerm_virtual_network" "vnetone" {
-  name                = "wasimnetwork"
+  name                = var.vnet_name
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.rgone.location
   resource_group_name = azurerm_resource_group.rgone.name
@@ -33,7 +33,7 @@ resource "azurerm_linux_virtual_machine" "vmone" {
   name                = var.VM_name
   resource_group_name = azurerm_resource_group.rgone.name
   location            = azurerm_resource_group.rgone.location
-  size                = "Standard_F2"
+  size                = var.size
   admin_username      = "adminuser"
   network_interface_ids = [
     azurerm_network_interface.nicone.id
