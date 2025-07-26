@@ -5,37 +5,37 @@ variable "VMSS_name" {
 }
 
 variable "rg_name" {
-  description = "Virtual machine name"
+  description = "resource group name"
   type        = string             # or number, bool, list, map, etc.
     # optional
 }
 
 variable "location" {
-  description = "Virtual machine name"
+  description = "location name"
   type        = string             # or number, bool, list, map, etc.
     # optional
 }
 
 variable "vnet_name" {
-  description = "Resource group name"
+  description = "vnet name"
   type        = string             # or number, bool, list, map, etc.
   # optional
 }
 
 variable "subnet" {
-  description = "Virtual machine name"
+  description = "subnet name"
   type        = string             # or number, bool, list, map, etc.
     # optional
 }
 
 variable "size" {
-  description = "Virtual machine name"
+  description = "Virtual machine size"
   type        = string             # or number, bool, list, map, etc.
     # optional
 }
 
 variable "pubkey" {
-  description = "Virtual machine name"
+  description = "ssh public key"
   type        = string             # or number, bool, list, map, etc.
     # optional
 }

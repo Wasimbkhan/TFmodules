@@ -11,25 +11,25 @@ variable "rg_name" {
 }
 
 variable "vnet_name" {
-  description = "Resource group name"
+  description = "virtual network name"
   type        = string             # or number, bool, list, map, etc.
   # optional
 }
 
 variable "subnet_name" {
-  description = "Resource group name"
+  description = "subnet name"
   type        = string             # or number, bool, list, map, etc.
    # optional
 }
 
 variable "location" {
-  description = "Resource group location"
+  description = "location name"
   type        = string             # or number, bool, list, map, etc.
    # optional
 }
 
 variable "size" {
-  description = "Resource group location"
+  description = "Virtual machine size"
   type        = string             # or number, bool, list, map, etc.
    # optional
 }
