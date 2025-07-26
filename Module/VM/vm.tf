@@ -26,6 +26,7 @@ resource "azurerm_network_interface" "nicone" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.subnetone.id
     private_ip_address_allocation = "Static"
+    private_ip_address = "10.0.2.5"
   }
 }
 

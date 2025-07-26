@@ -5,10 +5,10 @@ module "azml" {
   azml-subnet    = "azml-subnet"
   azml-insights  = "azml-insights"
   azml-kv        = "azml-kv"
-  azml-stg       = "azmlstg"
+  azml-stg       = "azmlstgtest"
   azml-cc        = "azml-cluster1"
   azml-workspace = "azml-workspace"
-  minnodecount   = 1
-  maxnodecount   = 2
+  minnodecount   = 0
+  maxnodecount   = 1
 
 }

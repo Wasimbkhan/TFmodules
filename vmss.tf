@@ -3,7 +3,7 @@ module "VMSS" {
   VMSS_name = "vmss-one"
   rg_name   = "rg-one"
   location  = "West Europe"
-  vnet_name = "wasimnetwork"
+  vnet_name = "vmss-vnet"
   subnet    = "subnet-one"
   pubkey    = file("~/.ssh/khan.pub")
   size      = "Standard_F2"
