@@ -5,12 +5,39 @@ resource "azurerm_resource_group" "azml-rg" {
   location = "eastus"
 }
 
+resource "azurerm_virtual_network" "azml-vnet" {
+  name                = var.azml-vnet
+  address_space       = ["10.1.0.0/16"]
+  location            = azurerm_resource_group.azml-rg.location
+  resource_group_name = azurerm_resource_group.azml-rg.name
+}
+
+resource "azurerm_subnet" "azml-subnet" {
+  name                 = var.azml-subnet
+  resource_group_name  = azurerm_resource_group.azml-rg.name
+  virtual_network_name = azurerm_virtual_network.azml-vnet.name
+  address_prefixes     = ["10.1.0.0/24"]
+}
 
 resource "azurerm_application_insights" "azml-insights" {
   name                = var.azml-insights
   location            = azurerm_resource_group.azml-rg.location
   resource_group_name = azurerm_resource_group.azml-rg.name
   application_type    = "web"
+}
+
+resource "azurerm_private_endpoint" "azmlinsights-pe" {
+  depends_on = [ azurerm_application_insights.azml-insights ]
+  name                = "azmlinsights-pe"
+  location            = azurerm_resource_group.azml-rg.location
+  resource_group_name = azurerm_resource_group.azml-rg.name
+  subnet_id           = azurerm_subnet.azml-subnet.id
+
+  private_service_connection {
+    name                           = "azml-insights-connection"
+    private_connection_resource_id = azurerm_application_insights.azml-insights.id
+    is_manual_connection           = false
+  }
 }
 
 resource "azurerm_key_vault" "azml-kv" {
@@ -24,12 +51,40 @@ resource "azurerm_key_vault" "azml-kv" {
   purge_protection_enabled = true
 }
 
+resource "azurerm_private_endpoint" "azmlkv-pe" {
+  depends_on = [ azurerm_key_vault.azml-kv ]
+  name                = "azmlkv-pe"
+  location            = azurerm_resource_group.azml-rg.location
+  resource_group_name = azurerm_resource_group.azml-rg.name
+  subnet_id           = azurerm_subnet.azml-subnet.id
+
+  private_service_connection {
+    name                           = "azmlkv-connection"
+    private_connection_resource_id = azurerm_key_vault.azml-kv.id
+    is_manual_connection           = false
+  }
+}
+
 resource "azurerm_storage_account" "azml-stg" {
   name                     = var.azml-stg
   location                 = azurerm_resource_group.azml-rg.location
   resource_group_name      = azurerm_resource_group.azml-rg.name
   account_tier             = "Standard"
   account_replication_type = "LRS"
+}
+
+resource "azurerm_private_endpoint" "azmlstg-pe" {
+  depends_on = [ azurerm_storage_account.azml-stg ]
+  name                = "azmlstg-pe"
+  location            = azurerm_resource_group.azml-rg.location
+  resource_group_name = azurerm_resource_group.azml-rg.name
+  subnet_id           = azurerm_subnet.azml-subnet.id
+
+  private_service_connection {
+    name                           = "azmlstg-connection"
+    private_connection_resource_id = azurerm_storage_account.azml-stg.id
+    is_manual_connection           = false
+  }
 }
 
 resource "azurerm_machine_learning_workspace" "azml-workspace" {
@@ -45,18 +100,39 @@ resource "azurerm_machine_learning_workspace" "azml-workspace" {
   }
 }
 
-resource "azurerm_virtual_network" "azml-vnet" {
-  name                = var.azml-vnet
-  address_space       = ["10.1.0.0/16"]
+resource "azurerm_private_endpoint" "azml-workspace-pe" {
+  depends_on = [ azurerm_machine_learning_workspace.azml-workspace ]
+  name                = "azml-workspace-pe"
   location            = azurerm_resource_group.azml-rg.location
   resource_group_name = azurerm_resource_group.azml-rg.name
+  subnet_id           = azurerm_subnet.azml-subnet.id
+
+  private_service_connection {
+    name                           = "azml-workspace-connection"
+    private_connection_resource_id = azurerm_machine_learning_workspace.azml-workspace.id
+    is_manual_connection           = false
+  }
 }
 
-resource "azurerm_subnet" "azml-subnet" {
-  name                 = var.azml-subnet
-  resource_group_name  = azurerm_resource_group.azml-rg.name
-  virtual_network_name = azurerm_virtual_network.azml-vnet.name
-  address_prefixes     = ["10.1.0.0/24"]
+resource "azurerm_container_registry" "azml_acr" {
+  name = "wasimazmlacr"
+  location = azurerm_resource_group.azml-rg.location
+  resource_group_name = azurerm_resource_group.azml-rg.name
+  sku = "Premium"
+}
+
+resource "azurerm_private_endpoint" "azmlacr-pe" {
+  depends_on = [ azurerm_container_registry.azml_acr ]
+  name                = "azmlacr-pe"
+  location            = azurerm_resource_group.azml-rg.location
+  resource_group_name = azurerm_resource_group.azml-rg.name
+  subnet_id           = azurerm_subnet.azml-subnet.id
+
+  private_service_connection {
+    name                           = "azmlacr-connection"
+    private_connection_resource_id = azurerm_machine_learning_workspace.azml-workspace.id
+    is_manual_connection           = false
+  }
 }
 
 resource "azurerm_machine_learning_compute_cluster" "azml-cc" {
@@ -78,3 +154,4 @@ resource "azurerm_machine_learning_compute_cluster" "azml-cc" {
     type = "SystemAssigned"
   }
 }
+

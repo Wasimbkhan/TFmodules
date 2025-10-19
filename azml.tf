@@ -7,8 +7,8 @@ module "azml" {
   azml-kv        = "azml-kv"
   azml-stg       = "azmlstgtest"
   azml-cc        = "azml-cluster1"
-  azml-workspace = "azml-workspace"
+  azml-workspace = "azml-workspace1"
   minnodecount   = 0
   maxnodecount   = 1
-
+  
 }
